@@ -180,7 +180,7 @@ export default function GameTab() {
                             placeholder="Selecione"
                             name='others'
                             selectionMode="multiple"
-                            onSelectionChange={(e) => {
+                            onSelectionChange={(e: any) => {
                                 setGame((prev: any) => {
                                     const selectedImages = game?.dbImages.filter((it) => e.has(it.props)); // Usando o método 'has' de Set
                                     const updatedGame = {

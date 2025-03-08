@@ -62,7 +62,7 @@ export default function PlayersTab(): JSX.Element {
             if (resp.data != null) {
                 setPlayers([...resp.data.map((p: any) => ({ ...p }))])
                 if (selectedPlayer != null) {
-                    setSelectedPlayer(resp.data.find(it => it._id == selectedPlayer._id))
+                    setSelectedPlayer(resp.data.find((it: IPlayer) => it._id == selectedPlayer._id))
                 }
             }
         });

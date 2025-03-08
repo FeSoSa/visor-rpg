@@ -1,82 +1,71 @@
-import { useWebSocket } from '@/context/WebSocketContext';
-import api from '@/data/api';
 import DefaultLayout from '@/layouts/default';
-import { IGame, IPlayer } from '@/typing.d.ts';
-import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
-import { AiFillSetting } from "react-icons/ai";
-import { FaFileAlt, FaMapMarkedAlt, FaUser } from 'react-icons/fa';
 import './styles.scss';
-import ConfigTab from './tabs/config';
-import Map from './tabs/map';
-import Player from './tabs/player';
-import RulesTab from './tabs/rules';
-import Second from './tabs/second';
 
 export default function PlayerPanel() {
-    const [menu, setMenu] = useState('map')
-    const [player, setPlayer] = useState<IPlayer | null>(null);
-    const [game, setGame] = useState<IGame | undefined>();
-    const router = useRouter();
-
-    const tabContent: Record<string, ReactNode> = {
-        second: <Second game={game!} />,
-        map: <Map game={game!} />,
-        player: <Player game={game!} player={player!}></Player>,
-        rules: <RulesTab />, // Substitua pelo conteúdo de "Enemies"
-        settings: <ConfigTab />, // Substitua pelo conteúdo de "Items"
-    };
-
-    useEffect(() => {
-        if (router.query.id) {
-            getGame()
-            getPlayer(router.query.id as string);
-        }
-    }, [router.query.id]);
-
-    function getPlayer(id: string) {
-        api.get(`player/${id}`).then((resp) => {
-            if (resp.data != null) {
-                setPlayer(resp.data[0]);
-            }
-        }).catch((error) => {
-            console.error("Erro ao buscar jogador:", error);
-        });
-    }
-
-    function getGame() {
-        api.get("/game").then((resp) => {
-            if (resp.data != null) {
-                setGame(resp.data)
-            }
-        })
-    }
-
-
-    const { socket } = useWebSocket();
-    useEffect(() => {
-        if (socket) {
-            socket.onmessage = (event) => {
-                console.log(event)
-                let message;
-                try {
-                    message = JSON.parse(event.data);
-                    console.log("WebSocket recebido")
-                    if (message.event == "game-updated") {
-                        setGame(message.data);
-                    } else if (message.event == "player-updated" && message.registry == player?.registry) {
-                        setPlayer(message.data);
-                    }
-                } catch (e) {
-                    console.log("Mensagem recebida (não JSON):", event.data);
-                }
-            };
-        }
-    }, [socket]);
-
+    /*  const [menu, setMenu] = useState('map')
+      const [player, setPlayer] = useState<IPlayer | null>(null);
+      const [game, setGame] = useState<IGame | undefined>();
+      const router = useRouter();
+  
+      const tabContent: Record<string, ReactNode> = {
+          second: <Second game={game!} />,
+          map: <Map game={game!} />,
+          player: <Player game={game!} player={player!}></Player>,
+          rules: <RulesTab />, // Substitua pelo conteúdo de "Enemies"
+          settings: <ConfigTab />, // Substitua pelo conteúdo de "Items"
+      };
+  
+      useEffect(() => {
+          if (router.query.id) {
+              getGame()
+              getPlayer(router.query.id as string);
+          }
+      }, [router.query.id]);
+  
+      function getPlayer(id: string) {
+          api.get(`player/${id}`).then((resp) => {
+              if (resp.data != null) {
+                  setPlayer(resp.data[0]);
+              }
+          }).catch((error) => {
+              console.error("Erro ao buscar jogador:", error);
+          });
+      }
+  
+      function getGame() {
+          api.get("/game").then((resp) => {
+              if (resp.data != null) {
+                  setGame(resp.data)
+              }
+          })
+      }
+  
+  
+      const { socket } = useWebSocket();
+      useEffect(() => {
+          if (socket) {
+              socket.onmessage = (event) => {
+                  console.log(event)
+                  let message;
+                  try {
+                      message = JSON.parse(event.data);
+                      console.log("WebSocket recebido")
+                      if (message.event == "game-updated") {
+                          setGame(message.data);
+                      } else if (message.event == "player-updated" && message.registry == player?.registry) {
+                          setPlayer(message.data);
+                      }
+                  } catch (e) {
+                      console.log("Mensagem recebida (não JSON):", event.data);
+                  }
+              };
+          }
+      }, [socket]);
+  */
     return (
         <DefaultLayout>
-            {
+            <div>desativado</div>
+            {/*
                 player?.registry ?
                     <main className="flex flex-row w-full h-full bg-neutral-900 border-box" >
 
@@ -104,6 +93,7 @@ export default function PlayerPanel() {
                         }
                     </main>
                     : <div>Carregando</div>
+                    */
             }
         </DefaultLayout>
     )
