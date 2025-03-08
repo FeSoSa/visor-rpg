@@ -6,7 +6,7 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-screen border-box bg-black/50 border-box">
+    <div className="h-screen border-box bg-neutral-900/75 border-box  backdrop-blur-sm">
       <Head />
       {children}
     </div>

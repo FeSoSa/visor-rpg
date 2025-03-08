@@ -42,18 +42,18 @@ export default function IndexPage() {
           network
             ? <>
               <div className='text-center'>
-                <div className='fw-bold title' style={{ fontSize: '80px' }} >Bem vindo</div>
+                <div className='fw-bold title alternativeFont' style={{ fontSize: '80px' }} >Bem vindo</div>
                 <div className='fw-medium title' style={{ fontSize: '30px' }}>Painél tático da O.N.I.X</div>
               </div>
 
 
               <div className='p-5'>
                 <fieldset className="input-group input-group-lg mb-5">
-                  <InputOtp length={3} size={'lg'} onValueChange={setRegistry} />
+                  <InputOtp length={3} size={'lg'} onValueChange={setRegistry} color='success' />
                 </fieldset>
               </div>
 
-              <Button isIconOnly aria-label="Like" onClick={signIn} className='h-24 w-24 p-5 bg-[#2E2E2E]' radius='lg'>
+              <Button isIconOnly aria-label="Like" onClick={signIn} className='h-24 w-24 p-5 bg-green-800' radius='lg'>
                 <FaChevronUp color='#FFF' size={100} />
               </Button>
             </>

@@ -8,7 +8,7 @@ import { itemsMock } from '@/data/items';
 import { weaponMock } from '@/data/weapons';
 import { Armor, Gun, IPlayer, Item, MagazineSlot } from '@/typing.d.ts';
 import { Button } from '@nextui-org/button';
-import { Checkbox, Divider, Drawer, DrawerContent, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from '@nextui-org/react';
+import { Checkbox, Divider, Drawer, DrawerContent, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Radio, RadioGroup, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from '@nextui-org/react';
 import Image from 'next/image';
 import { JSX, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -201,6 +201,7 @@ export default function PlayersTab(): JSX.Element {
                     ];
                 }
 
+                weapon.mod = selected2 != null ? Number(selected2) : 0
                 const updatedPlayer = {
                     ...selectedPlayer,
                     guns: {
@@ -215,6 +216,7 @@ export default function PlayersTab(): JSX.Element {
         }
 
         setSelected("");
+        setSelected2("");
     }
     function addItem() {
         onModalItemClose();
@@ -415,6 +417,14 @@ export default function PlayersTab(): JSX.Element {
                                 >
                                     {(gun: Gun) => <SelectItem key={gun?.name}>{gun?.name}</SelectItem>}
                                 </Select>
+
+                                <Input
+                                    type='number'
+                                    label="Modificador"
+                                    placeholder="Digite"
+                                    value={selected2}
+                                    onChange={(e) => setSelected2(e.target.value)}
+                                />
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>

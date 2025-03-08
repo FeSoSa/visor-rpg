@@ -29,7 +29,7 @@ export interface MagazineSlot {
     _id?: string
 }
 export interface Armor {
-    type: "H" | "M" | "L" | "SH";
+    type: "H" | "M" | "L" | "SH" | " ";
     hp: number;
     maxHp: number;
     slots: number;
@@ -79,6 +79,17 @@ export interface IPlayer {
     guns: Guns;
     utilitaries: Item[];
     items: Item[];
+}
+export interface IEnemie {
+    _id?: string,
+    name: string,
+    maxHp: number;
+    hp: number;
+    armor: Armor;
+    gun: Gun
+    magazines: MagazineSlot[];
+    items: Item[];
+    obs: string
 }
 export interface OperatorData {
     gunSelected: 'primary' | 'secondary'

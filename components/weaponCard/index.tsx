@@ -1,21 +1,23 @@
 import api from '@/data/api';
 import constants from '@/data/constants';
-import { IPlayer } from '@/typing.d.ts';
+import { IEnemie, IPlayer } from '@/typing.d.ts';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
 import Image from 'next/image';
 import { useState } from 'react';
 
 export interface I {
-    player: IPlayer
+    player: IPlayer | IEnemie
     type: 'primary' | 'secondary',
 }
+// Type Guard para verificar se o player é um IPlayer
+const isPlayer = (p: IPlayer | IEnemie): p is IPlayer => 'guns' in p;
 
 export default function WeaponCard({ player, type, }: I) {
     const [bulletCount, setBulletCount] = useState('');
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-    const weapon = player.guns[type]
-    const magazines = player.magazines[type]
-    const magazineIndex = weapon.magazineSelected
+    const weapon = isPlayer(player) ? player.guns[type] : player.gun;
+    const magazines = isPlayer(player) ? player.magazines[type] : player.magazines;
+    const magazineIndex = weapon?.magazineSelected ?? 0;
 
     function fire() {
         onClose();
@@ -26,46 +28,64 @@ export default function WeaponCard({ player, type, }: I) {
         if (bulletCountNumber <= availableBullets) {
             const updatedMagazines = [...magazines];
             updatedMagazines[magazineIndex].bullets -= bulletCountNumber;
-            const updatedPlayer = {
-                ...player,
-                magazines: {
-                    ...player.magazines,
-                    [type]: updatedMagazines
+            const updatedPlayer = isPlayer(player)
+                ? {
+                    ...player,
+                    magazines: {
+                        ...player.magazines,
+                        [type]: updatedMagazines
+                    }
                 }
-            };
+                : {
+                    ...player,
+                    magazines: updatedMagazines
+                };
 
-            api.post("player/save", updatedPlayer);
+            api.post(`${isPlayer(player) ? 'player' : 'enemie'}/save`, updatedPlayer);
             setBulletCount('');
         } else {
             const updatedMagazines = [...magazines];
             updatedMagazines[magazineIndex].bullets = 0;
-            const updatedPlayer = {
-                ...player,
-                magazines: {
-                    ...player.magazines,
-                    [type]: updatedMagazines
+            const updatedPlayer = isPlayer(player)
+                ? {
+                    ...player,
+                    magazines: {
+                        ...player.magazines,
+                        [type]: updatedMagazines
+                    }
                 }
-            };
+                : {
+                    ...player,
+                    magazines: updatedMagazines
+                };
 
-            api.post("player/save", updatedPlayer);
+            api.post(`${isPlayer(player) ? 'player' : 'enemie'}/save`, updatedPlayer);
             setBulletCount('');
         }
     }
 
     function changeMagazine(index: number) {
         if (magazineIndex !== index) {
-            const updatedPlayer = {
-                ...player,
-                guns: {
-                    ...player.guns,
-                    [type]: {
-                        ...player.guns[type],
-                        magazineSelected: index
+            const updatedPlayer = isPlayer(player)
+                ? {
+                    ...player,
+                    guns: {
+                        ...player.guns,
+                        [type]: {
+                            ...player.guns[type],
+                            magazineSelected: index
+                        }
                     }
                 }
-            };
+                : {
+                    ...player,
+                    gun: {
+                        ...player.gun,
+                        magazineSelected: index
+                    }
+                };
 
-            api.post("player/save", updatedPlayer)
+            api.post(`${isPlayer(player) ? 'player' : 'enemie'}/save`, updatedPlayer);
         }
     }
 
@@ -88,8 +108,8 @@ export default function WeaponCard({ player, type, }: I) {
                     style={{
                         objectFit: "contain",
                     }}
-                    className={`p-2 hover:bg-[${player.gunSelected == type ? '#8B0000' : '#15803d'}] cursor-pointer ${player.gunSelected == type && 'bg-[#15803d]'}`}
-                    onClick={player.gunSelected == type ? onOpen : changeWeapon}
+                    className={`p-2 hover:bg-[${isPlayer(player) && player.gunSelected == type ? '#8B0000' : '#15803d'}] cursor-pointer ${isPlayer(player) && player.gunSelected == type && 'bg-[#15803d]'}`}
+                    onClick={!isPlayer(player) || player.gunSelected == type ? onOpen : changeWeapon}
                 />
                 <div className="flex flex-wrap w-full grid grid-cols-4 grid-rows-2 grid-flow-row">
                     {magazines.map((magazine, index) => (

@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'SairaStencilOne';
+    src: url('/fonts/SairaStencilOne-Regular') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.alternativeFont {
+    font-family: 'SairaStencilOne', sans-serif;
+}
+
 html,
 body {
     height: 100%;
@@ -10,7 +21,8 @@ body {
 }
 
 body {
-    background-image: url('/assets/logo.png'), url('/assets/camo.jpg');
+    background-image: url('/assets/logo.png');
+    background-color: #171717;
     background-position: center, center;
     /* Centraliza ambas as imagens */
     background-repeat: no-repeat, repeat;
@@ -23,7 +35,7 @@ body {
 }
 
 .bg {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: #171717;
     height: 100%;
     box-sizing: border-box;
 }

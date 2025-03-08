@@ -174,6 +174,14 @@ export const itemsMock: Record<string, Item> = {
         type: "item",
         rechargeable: true,
         reloading: false
+    },
+    molotov: {
+        url: "1PswzouhphYfhPNm2IYl2or8DvhDsXlsd",
+        name: "Granada incendiária",
+        desc: "Causa dano flamejante em área, afeta personagens na área de impacto.",
+        quantity: 1,
+        usable: true,
+        type: "grenade"
     }
 
 }

@@ -1,6 +1,14 @@
 import { Armor } from "@/typing.d.ts";
 
 export const armorMock: Record<string, Armor> = {
+    none: {
+        type: " ",
+        hp: 0,
+        maxHp: 0,
+        slots: 2,
+        pocket: 0,
+        name: "Nenhum"
+    },
     light: {
         type: "L",
         hp: 20,
@@ -27,8 +35,8 @@ export const armorMock: Record<string, Armor> = {
     },
     superHeavy: {
         type: "SH",
-        hp: 80,
-        maxHp: 80,
+        hp: 150,
+        maxHp: 150,
         slots: 1,
         pocket: 0,
         name: "Colete super-pesado"

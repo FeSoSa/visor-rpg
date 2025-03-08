@@ -65,7 +65,7 @@ export const weaponMock: Record<string, Gun> = {
         type: "L",
         mod: 0
     },
-    Uzi: {
+    uzi: {
         url: "1vQcx-gOnVSGFCQJVruP41gDaZnbMfywH",
         name: "Uzi",
         capacity: 30,
