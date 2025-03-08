@@ -1,5 +1,4 @@
 import DefaultLayout from '@/layouts/default';
-import './styles.scss';
 
 export default function PlayerPanel() {
     /*  const [menu, setMenu] = useState('map')

@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { FaTimesCircle } from 'react-icons/fa';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
-import './styles.scss';
 
 export default function GameTab() {
 
