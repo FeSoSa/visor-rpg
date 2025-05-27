@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 
-export type TabKey = "Users" | "Players" | "Enemies" | "Game";
+export type TabKey = "Users" | "Players" | "Game" | "Map";
 interface I {
   selected: TabKey
   onSelect: Dispatch<SetStateAction<TabKey>>
@@ -20,8 +20,8 @@ export const Navbar = ({ selected, onSelect }: I) => {
   const tabs: { label: string; href: TabKey }[] = [
     { href: "Users", label: "Cadastro" },
     { href: "Players", label: "Jogadores" },
-    { href: "Enemies", label: "Inimigos" },
-    { href: "Game", label: "jogo" },
+    { href: "Game", label: "Jogo" },
+    { href: "Map", label: "Mapa" },
   ];
 
   function logout() {

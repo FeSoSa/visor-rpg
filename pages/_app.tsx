@@ -1,5 +1,6 @@
 import { fontMono, fontSans } from "@/config/fonts";
 import { AuthProvider } from "@/context/AuthContext";
+import { GameProvider } from "@/context/gameContext";
 import { WebSocketProvider } from "@/context/WebSocketContext";
 import { NextUIProvider } from "@nextui-org/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
@@ -14,9 +15,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider>
         <AuthProvider>
-          <WebSocketProvider>
-            <Component {...pageProps} />
-          </WebSocketProvider>
+          <GameProvider>
+            <WebSocketProvider>
+              <Component {...pageProps} />
+            </WebSocketProvider>
+          </GameProvider>
         </AuthProvider>
       </NextThemesProvider>
     </NextUIProvider>

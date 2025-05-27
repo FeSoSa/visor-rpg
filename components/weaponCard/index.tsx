@@ -1,9 +1,9 @@
+import { GameContext } from '@/context/gameContext';
 import api from '@/data/api';
 import constants from '@/data/constants';
 import { IEnemie, IPlayer } from '@/typing.d.ts';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 export interface I {
     player: IPlayer | IEnemie
@@ -13,56 +13,11 @@ export interface I {
 const isPlayer = (p: IPlayer | IEnemie): p is IPlayer => 'guns' in p;
 
 export default function WeaponCard({ player, type, }: I) {
+    const { prepare, isShooting, shoot, shooted } = useContext(GameContext)
     const [bulletCount, setBulletCount] = useState('');
-    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
     const weapon = isPlayer(player) ? player.guns[type] : player.gun;
     const magazines = isPlayer(player) ? player.magazines[type] : player.magazines;
     const magazineIndex = weapon?.magazineSelected ?? 0;
-
-    function fire() {
-        onClose();
-
-        const bulletCountNumber = Number(bulletCount);
-        const availableBullets = magazines[magazineIndex].bullets;
-
-        if (bulletCountNumber <= availableBullets) {
-            const updatedMagazines = [...magazines];
-            updatedMagazines[magazineIndex].bullets -= bulletCountNumber;
-            const updatedPlayer = isPlayer(player)
-                ? {
-                    ...player,
-                    magazines: {
-                        ...player.magazines,
-                        [type]: updatedMagazines
-                    }
-                }
-                : {
-                    ...player,
-                    magazines: updatedMagazines
-                };
-
-            api.post(`${isPlayer(player) ? 'player' : 'enemie'}/save`, updatedPlayer);
-            setBulletCount('');
-        } else {
-            const updatedMagazines = [...magazines];
-            updatedMagazines[magazineIndex].bullets = 0;
-            const updatedPlayer = isPlayer(player)
-                ? {
-                    ...player,
-                    magazines: {
-                        ...player.magazines,
-                        [type]: updatedMagazines
-                    }
-                }
-                : {
-                    ...player,
-                    magazines: updatedMagazines
-                };
-
-            api.post(`${isPlayer(player) ? 'player' : 'enemie'}/save`, updatedPlayer);
-            setBulletCount('');
-        }
-    }
 
     function changeMagazine(index: number) {
         if (magazineIndex !== index) {
@@ -88,7 +43,6 @@ export default function WeaponCard({ player, type, }: I) {
             api.post(`${isPlayer(player) ? 'player' : 'enemie'}/save`, updatedPlayer);
         }
     }
-
     function changeWeapon() {
         const updatedPlayer = {
             ...player,
@@ -99,20 +53,45 @@ export default function WeaponCard({ player, type, }: I) {
 
     return (
         <>
-            <div className="flex flex-row">
+            <div className='flex flex-row'>
                 <Image
-                    src={`${constants.driveURL}${weapon.url}`}
-                    alt={`${type} - ${weapon.name}`}
-                    width={125}
+                    src={`${constants.driveURL}${weapon?.url}`}
+                    alt={`${type} - ${weapon?.name}`}
+                    width={110}
                     height={75}
                     style={{
                         objectFit: "contain",
                     }}
-                    className={`p-2 hover:bg-[${isPlayer(player) && player.gunSelected == type ? '#8B0000' : '#15803d'}] cursor-pointer ${isPlayer(player) && player.gunSelected == type && 'bg-[#15803d]'}`}
-                    onClick={!isPlayer(player) || player.gunSelected == type ? onOpen : changeWeapon}
+                    className={`p-2 cursor-pointer ${(isShooting && shoot?._id == player._id && (isPlayer(player) && player.gunSelected == type || !isPlayer(player))) ? 'bg-amber-500' : isPlayer(player) && (player.gunSelected == type || weapon?.type == "shield") && 'bg-[#15803d]'}`}
+                    onClick={() => {
+                        if (weapon?.type === "shield") return;
+                        if ((!isPlayer(player) || player.gunSelected === type)) prepare(player);
+                        else changeWeapon();
+                    }}
                 />
-                <div className="flex flex-wrap w-full grid grid-cols-4 grid-rows-2 grid-flow-row">
-                    {magazines.map((magazine, index) => (
+                {
+                    type == "primary" && isPlayer(player) &&
+                    <div className='grid grid-rows-3 grid-cols-1 w-10 p-1 gap-1'>
+                        {[...Array(3)].map((_, index) => {
+                            const att = weapon?.attachment?.[index];
+                            return (
+                                <div className='bg-neutral-700 rounded flex items-center justify-center'>
+                                    {att?.url != null &&
+                                        <Image
+                                            key={index}
+                                            src={`${constants.driveURL}${att.url}`}
+                                            alt="attachment"
+                                            width={16}
+                                            height={16}
+                                            style={{ objectFit: "cover" }}
+                                        />}
+                                </div>
+                            );
+                        })}
+                    </div>
+                }
+                <div className={`flex flex-wrap w-full grid  grid-rows-2 grid-flow-row ${type == "primary" ? 'grid-cols-3' : 'grid-cols-4'}`}>
+                    {magazines?.map((magazine, index) => (
                         <div onClick={() => changeMagazine(index)}
                             className={`p-1 border-1 border-neutral-900 text-center text-black font-bold cursor-pointer
         hover:bg-lime-900 
@@ -138,37 +117,6 @@ export default function WeaponCard({ player, type, }: I) {
                     ))}
                 </div>
             </div>
-
-            <Modal isOpen={isOpen} isDismissable={true} onOpenChange={onOpenChange} >
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader className="flex flex-col gap-1">Atirar</ModalHeader>
-                            <ModalBody>
-                                <Input
-                                    type='number'
-                                    label="Balas"
-                                    placeholder="Atirou quantas balas?"
-                                    variant="bordered"
-                                    min={1}
-                                    value={bulletCount}
-                                    max={magazines[magazineIndex].bullets}
-                                    onChange={(e) => setBulletCount(e.target.value)}
-                                />
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="success" className='w-full' onPress={() => {
-                                    if (magazines[magazineIndex].bullets >= Number(bulletCount) && Number(bulletCount) > 0) {
-                                        fire();
-                                    }
-                                }}  >
-                                    Confirmar
-                                </Button>
-                            </ModalFooter>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
         </>
     );
 }

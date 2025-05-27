@@ -1,7 +1,7 @@
 import api from '@/data/api';
 
 import { operators } from '@/data/operators/operators';
-import { IPlayer, IUser, PlayerClass } from '@/typing.d.ts';
+import { IPlayer, IUser, playerClass } from '@/typing.d.ts';
 import { Form } from "@nextui-org/form";
 import { Button, Card, CardBody, Divider, Input } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/select";
@@ -49,7 +49,8 @@ export default function Users() {
     }
 
     const setPlayerClassData = (className: string) => {
-        const playerClass = className as PlayerClass;
+        const playerClass = className as playerClass;
+        console.log(operators[playerClass])
         if (playerClass && operators[playerClass]) {
             return {
                 ...selectedPlayer,
@@ -87,34 +88,35 @@ export default function Users() {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.currentTarget));
 
+        let updatedPlayer = selectedPlayer;
         if (loadClass) {
-            const updatedPlayer = await setPlayerClassData(data.class.toString());
-            await setSelectedPlayer(updatedPlayer as IPlayer);
+            updatedPlayer = await setPlayerClassData(data.class.toString()) as IPlayer;
+            await setSelectedPlayer(updatedPlayer);
         }
-        setSelectedPlayer((prevPlayer: any) => {
-            if (!prevPlayer || !selectedUser) {
-                return null;
-            }
-            return {
-                ...prevPlayer,
-                userRegistry: selectedUser.registry,
-                name: data.name,
-                registry: data.registry,
-                codename: data.codename,
-                photo: data.photo,
-                status: data.status,
-                class: data.class
-            };
-        });
-        console.log(data)
-        console.log(selectedPlayer)
-        api.post("/player/save", selectedPlayer).then((resp) => {
-            console.log(resp)
+
+        if (!updatedPlayer || !selectedUser) return;
+
+        updatedPlayer = {
+            ...updatedPlayer,
+            userRegistry: selectedUser.registry,
+            name: data.name?.toString(),
+            registry: data.registry?.toString(),
+            nationality: data.nationality?.toString(),
+            codename: data.codename?.toString(),
+            photo: data.photo?.toString(),
+            status: data.status?.toString(),
+            class: data.class?.toString() as playerClass
+        };
+
+        setSelectedPlayer(updatedPlayer);
+
+        api.post("/player/save", updatedPlayer).then((resp) => {
+            console.log(resp);
             if (resp.data != null && selectedUser) {
-                setLoadClass(false)
-                getPlayers(selectedUser)
+                setLoadClass(false);
+                getPlayers(selectedUser);
             }
-        })
+        });
     };
 
     const onSubmitUser = (e: any) => {
@@ -203,6 +205,14 @@ export default function Users() {
                             />
 
                             <Input className="max-w-md mb-2"
+                                label="Nacionalidade"
+                                labelPlacement="outside"
+                                placeholder="Insira a nacionalidade"
+                                name='nationality'
+                                value={selectedPlayer?.nationality}
+                            />
+
+                            <Input className="max-w-md mb-2"
                                 label="Foto"
                                 labelPlacement="outside"
                                 placeholder="Insira a foto"
@@ -231,12 +241,14 @@ export default function Users() {
                                 name='class'
                                 placeholder="Selecione uma classe"
                                 selectedKeys={[selectedPlayer?.class ?? ""]}
-                                onChange={(e) => setSelectedPlayer({ ...selectedPlayer!, class: e.target.value as PlayerClass })}>
+                                onChange={(e) => setSelectedPlayer({ ...selectedPlayer!, class: e.target.value as playerClass })}>
                                 <SelectItem key="sniper">Sniper</SelectItem>
                                 <SelectItem key="assault">Assalto</SelectItem>
                                 <SelectItem key="engeneer">Engenheiro</SelectItem>
                                 <SelectItem key="medic">Médico</SelectItem>
                                 <SelectItem key="inteligence">Inteligência</SelectItem>
+                                <SelectItem key="hunter">Caçador</SelectItem>
+                                <SelectItem key="vanguard">Vanguarda</SelectItem>
                             </Select>
 
                             <Button className="max-w-md px-[15px]" color="success" type="button" onPress={() => setLoadClass(true)}>

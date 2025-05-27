@@ -5,15 +5,17 @@ import { Button } from '@nextui-org/button';
 import { Modal, ModalBody, ModalContent, ModalFooter, Textarea, useDisclosure } from '@nextui-org/react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { FaShieldAlt, FaTimesCircle } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import ArmorBar from '../armorBar';
 import HealthBar from '../heathBar';
 import WeaponCard from '../weaponCard/index';
 
 export default function EnemieCard({
     enemie,
+    kill
 }: {
     enemie: IEnemie;
+    kill: (x: IEnemie) => void
 }) {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null)
@@ -57,9 +59,7 @@ export default function EnemieCard({
         }
         setSelectedItem(null);
     }
-    function kill() {
-        api.delete("enemie/remove/" + enemie._id)
-    }
+
     function handleUseItem(item: Item) {
         setSelectedItem(item)
         onOpen()
@@ -69,12 +69,23 @@ export default function EnemieCard({
         <>
             <div
                 className={`flex flex-col h-full grow bg-neutral-900 transition-transform border-2 border-black`}>
-                <div className={`flex justify-between items-center p-2 px-4 bg-neutral-800"`}>
-                    <div className='flex gap-2 items-center'>
-                        <div className='text-xl text-red-700 font-bold'>{enemie.name}</div>
-                        <div className='flex items-center gap-1'><FaShieldAlt /> {enemie.armor.type}</div>
+                <div
+                    className={`flex cursor-pointer ease-out duration-300 `}
+                >
+                    <div className="relative w-1/2 h-full bg-red-800">
+                        <Image
+                            src={`${constants.driveURL}11a0aZr_Vup4PIWKfeRzlVLjSbxhM7O4f`}
+                            alt="Player"
+                            fill
+                            objectFit="contain"
+                        />
                     </div>
-                    <button className='hover:text-red-700 cursor-pointer' onClick={kill}><FaTimesCircle size={25} /></button>
+                    <div className="flex justify-center items-center p-1 w-full">
+                        <div className='text-xl font-bold'>{enemie.name}</div>
+                    </div>
+                    <div className="p-1 flex justify-center items-center">
+                        <FaTimes size={25} className='hover:text-red-600' onClick={() => kill(enemie)} />
+                    </div>
                 </div>
 
                 <div className="px-1">
@@ -93,7 +104,7 @@ export default function EnemieCard({
                 <div className="flex flex-col h-full">
                     <WeaponCard player={enemie} type="primary" />
                     <hr className="m-0" />
-                    <div className="grid grid-cols-3 grid-rows-1 gap-2 h-full p-2" >
+                    <div className="grid grid-cols-4 grid-rows-1 gap-2 h-full p-2" >
                         {enemie.items.map((item, index) => (
                             <div onClick={() => handleUseItem(item)}
                                 key={index}
@@ -105,8 +116,8 @@ export default function EnemieCard({
                                 <Image
                                     src={`${constants.driveURL}${item.url}`}
                                     alt={item.name}
-                                    width={50}
-                                    height={50}
+                                    width={40}
+                                    height={40}
                                     style={{
                                         objectFit: "contain",
                                     }}
@@ -121,7 +132,7 @@ export default function EnemieCard({
                         size='lg'
                         variant="flat"
                         radius='none'
-                        maxRows={3}
+                        maxRows={2}
                         onBlur={handleObs}
                         onValueChange={setText}
                     />

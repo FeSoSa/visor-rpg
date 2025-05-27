@@ -146,15 +146,6 @@ export const itemsMock: Record<string, Item> = {
         usable: false,
         type: "item",
     },
-    scope: {
-        url: "1aW1xZFSehl0l0myweHNnflplzs5f9amr",
-        name: "Scope",
-        desc: "Visor para maior precisão em disparos.",
-        quantity: 1,
-        usable: true,
-        type: "item",
-        value: 1.0
-    },
     drone: {
         url: "1Ut1kUFLkImNr6EHoZeL8Wso2MJuYYIbP",
         name: "Drone",
@@ -182,6 +173,62 @@ export const itemsMock: Record<string, Item> = {
         quantity: 1,
         usable: true,
         type: "grenade"
+    },
+    mask: {
+        url: "1NVot0VSonCgJak_49_PlujwLbPxBwbQv",
+        name: "Máscara Tática de Gás",
+        desc: "Filtra gases tóxicos e fumaça. Protege contra efeitos respiratórios.",
+        quantity: 1,
+        usable: false,
+        type: "item"
+    },
+    composite: {
+        url: "1SojvXe07iJ6U4IRSt_nfZsR7NAUTFvTO",
+        name: "VitaFlux-R",
+        desc: "Composto injetável que concede +30 de vida temporária.",
+        quantity: 1,
+        usable: true,
+        type: "item"
+    },
+    nano: {
+        url: "1soNKqGX5CqULY3Il9hjzynJx6jBTMdmB",
+        name: "NanoDart-X",
+        desc: "Lançador de mísseis miniaturizados acoplado ao braço. Capaz de atingir inimigos atrás de cobertura.",
+        quantity: 1,
+        usable: true,
+        type: "item",
+        value: 6
+    },
+    glass: {
+        url: "19JOnsuAKXh9gMiMIvKAsq9dJDnxhEDb5",
+        name: "Spectra-V",
+        desc: "Óculos avançados que permitem visão clara em meio a fumaça, gás e neblina.",
+        quantity: 1,
+        usable: false,
+        type: "item"
+    },
+    hook: {
+        url: "1-6xxRq-4mcPdopxWRIYQnTo2e1DhXffG",
+        name: "Gancho Ascendente",
+        desc: "Dispositivo portátil para escalada rápida em estruturas verticais.",
+        quantity: 1,
+        usable: true,
+        type: "item"
+    },
+    pem: {
+        url: "1k99YqT7BnwT_MBnicp_CzmkLOhQImrNK",
+        name: "Mini PEM",
+        desc: "Pulso eletromagnético de curto alcance que desativa eletrônicos em um pequeno raio.",
+        quantity: 1,
+        usable: true,
+        type: "grenade"
+    },
+    special: {
+        url: "1DUJa0qPYKjUuH7sQdJSEiZ9_8HibvZrp",
+        name: "Balas Especiais",
+        desc: "Munição de alto desempenho, superior à pesada. Pode incluir efeitos como perfuração, explosão ou choque.",
+        quantity: 1,
+        usable: true,
+        type: "item"
     }
-
 }

@@ -1,12 +1,9 @@
 import api from '@/data/api';
-import constants from '@/data/constants';
 import { IGame } from '@/typing.d.ts';
 import { Button, cn, Divider, Form, Input, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react';
 import { Switch } from '@nextui-org/switch';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { FaTimesCircle } from 'react-icons/fa';
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 export default function GameTab() {
 
@@ -128,7 +125,7 @@ export default function GameTab() {
                 {game != null &&
                     <>
                         <Select
-                            items={game?.dbImages}
+                            items={game?.dbImages.sort((a, b) => a.name.localeCompare(b.name))}
                             className='max-w-md'
                             size='lg'
                             label="Mapa completo"
@@ -172,7 +169,7 @@ export default function GameTab() {
                         </Select>
 
                         <Select
-                            items={game?.dbImages}
+                            items={game?.dbImages.sort((a, b) => a.name.localeCompare(b.name))}
                             className='max-w-md'
                             size='lg'
                             label="Outros"
@@ -199,19 +196,27 @@ export default function GameTab() {
 
                 <Divider />
 
-                <Form validationBehavior="native" onSubmit={addImage} className="flex flex-col gap-2">
-                    <div className='flex flex-row gap-4'>
-                        <Input label="Nome" name='name' value={form?.name} onChange={(e) => setForm((prev: any) => ({ ...prev, name: e.target.value }))} />
-                        <Input label="ID" name='id' value={form?.id} onChange={(e) => setForm((prev: any) => ({ ...prev, id: e.target.value }))} />
-                    </div>
-                    <Button color="primary" className='w-full' type='submit'>Adicionar</Button>
-                </Form>
+                <div>
+
+                </div>
+
             </div>
 
             {game != null &&
-                <div className='h-full grid grid-rows-3'>
+                <div className='h-full'>
 
-                    <Table className=' px-8'>
+                    <Form validationBehavior="native" onSubmit={addImage} className="flex flex-col items-center gap-2 mb-8">
+                        <div className='flex flex-row gap-4'>
+                            <Input label="Nome" name='name' value={form?.name} onChange={(e) => setForm((prev: any) => ({ ...prev, name: e.target.value }))} />
+                            <Input label="ID" name='id' value={form?.id} onChange={(e) => setForm((prev: any) => ({ ...prev, id: e.target.value }))} />
+                        </div>
+                        <Button color="primary" className='w-1/3' type='submit'>Adicionar</Button>
+                    </Form>
+                    <Divider />
+                    <Table
+                        classNames={{
+                            base: "max-h-[650px] px-8 my-8",
+                        }}>
                         <TableHeader>
                             <TableColumn>Nome</TableColumn>
                             <TableColumn>ID</TableColumn>
@@ -233,19 +238,6 @@ export default function GameTab() {
                                 : []}
                         </TableBody>
                     </Table>
-
-                    <div className="h-full row-span-2 w-full relative p-8">
-                        <TransformWrapper>
-                            <TransformComponent>
-                                <Image
-                                    src={constants.driveURL + game.completeMap}
-                                    alt="Imagem de fundo"
-                                    layout="fill"
-                                    objectFit="contain"
-                                />
-                            </TransformComponent>
-                        </TransformWrapper>
-                    </div>
                 </div>
             }
         </main>
